@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Base32",
+        "repositoryURL": "https://github.com/norio-nomura/Base32.git",
+        "state": {
+          "branch": null,
+          "revision": "d1f8bffa131352a8d86f0a1c3ba7c8c89d3ee760",
+          "version": "0.5.4"
+        }
+      },
+      {
+        "package": "BigInt",
+        "repositoryURL": "https://github.com/attaswift/BigInt.git",
+        "state": {
+          "branch": null,
+          "revision": "e3879c569817a844ca2c54a9095c59e1d779cd5d",
+          "version": "3.0.1"
+        }
+      },
+      {
+        "package": "SipHash",
+        "repositoryURL": "https://github.com/attaswift/SipHash",
+        "state": {
+          "branch": null,
+          "revision": "7b47e3f23a66770b1eb18e15e20546aad398c9dd",
+          "version": "1.2.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
