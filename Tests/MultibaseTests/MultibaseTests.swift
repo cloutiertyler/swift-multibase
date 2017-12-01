@@ -25,14 +25,14 @@ class MultibaseTests: XCTestCase {
 
     func testEncode() {
         for (encoding, expected) in encodedSamples {
-            let actual = String(multibaseEncoding: sampleBytes, inBase: encoding)
+            let actual = sampleBytes.multibaseEncodedString(inBase: encoding)
             XCTAssertEqual(actual, expected, "Encoding: \(encoding)")
         }
     }
 
     func testDecode() {
         for (expectedEncoding, string) in encodedSamples {
-            let actualData = Data(multibaseDecoding: string)
+            let actualData = Data(multibaseEncoded: string)
             let actualEncoding = string.baseEncoding
             let expectedData = sampleBytes
             XCTAssertEqual(actualData, expectedData, "Encoding: \(expectedEncoding)")
@@ -44,9 +44,9 @@ class MultibaseTests: XCTestCase {
         let bases = encodedSamples.keys
         var bytes = sampleBytes
         for base in bases {
-            let string = String(multibaseEncoding: bytes, inBase: base)!
+            let string = bytes.multibaseEncodedString(inBase: base)
             XCTAssertEqual(string.baseEncoding, base)
-            bytes = Data(multibaseDecoding: string)!
+            bytes = Data(multibaseEncoded: string)!
         }
         XCTAssertEqual(bytes, sampleBytes)
     }

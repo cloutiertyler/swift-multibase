@@ -26,39 +26,7 @@ public enum BaseEncoding: UInt8 {
 
 extension String {
 
-    init?(multibaseEncoding data: Data, inBase base: BaseEncoding) {
-        let byteString = [base.rawValue] + data
-        let stringBaseEncoding = String(bytes: [base.rawValue], encoding: String.Encoding.utf8)!
-
-        switch base {
-        case .identity:
-            self = String(bytes: byteString, encoding: String.Encoding.utf8)!
-        case .base16:
-            self = stringBaseEncoding + String(base16Encoding: data)
-        case .base16Upper:
-            self = stringBaseEncoding + String(base16Encoding: data).uppercased()
-        case .base32Pad:
-            self = stringBaseEncoding + String(base32Encoding: data).lowercased()
-        case .base32PadUpper:
-            self = stringBaseEncoding + String(base32Encoding: data).uppercased()
-        case .base32HexPad:
-            self = stringBaseEncoding + String(base32HexEncoding: data).lowercased()
-        case .base32HexPadUpper:
-            self = stringBaseEncoding + String(base32HexEncoding: data).uppercased()
-        case .base58BTC:
-            self = stringBaseEncoding + String(base58Encoding: data, alphabet: Base58String.btcAlphabet)
-        case .base58Flickr:
-            self = stringBaseEncoding + String(base58Encoding: data, alphabet: Base58String.flickrAlphabet)
-        case .base64Pad:
-            self = stringBaseEncoding + data.base64EncodedString()
-        case .base64URLPad:
-            self = stringBaseEncoding + data.base64URLPadEncodedString()
-        default:
-            return nil
-        }
-    }
-
-   public var baseEncoding: BaseEncoding {
+    public var baseEncoding: BaseEncoding {
         let base = Array(self.utf8)[0]
         return BaseEncoding(rawValue: base)!
     }
@@ -67,7 +35,39 @@ extension String {
 
 extension Data {
 
-    init?(multibaseDecoding multibaseString: String) {
+    func multibaseEncodedString(inBase base: BaseEncoding) -> String {
+        let byteString = [base.rawValue] + self
+        let stringBaseEncoding = String(bytes: [base.rawValue], encoding: String.Encoding.utf8)!
+
+        switch base {
+        case .identity:
+            return String(bytes: byteString, encoding: String.Encoding.utf8)!
+        case .base16:
+            return stringBaseEncoding + self.base16EncodedString().lowercased()
+        case .base16Upper:
+            return stringBaseEncoding + self.base16EncodedString().uppercased()
+        case .base32Pad:
+            return stringBaseEncoding + self.base32EncodedString().lowercased()
+        case .base32PadUpper:
+            return stringBaseEncoding + self.base32EncodedString().uppercased()
+        case .base32HexPad:
+            return stringBaseEncoding + self.base32HexEncodedString().lowercased()
+        case .base32HexPadUpper:
+            return stringBaseEncoding + self.base32HexEncodedString().uppercased()
+        case .base58BTC:
+            return stringBaseEncoding + self.base58EncodedString(alphabet: Base58String.btcAlphabet)
+        case .base58Flickr:
+            return stringBaseEncoding + self.base58EncodedString(alphabet: Base58String.flickrAlphabet)
+        case .base64Pad:
+            return stringBaseEncoding + self.base64EncodedString()
+        case .base64URLPad:
+            return stringBaseEncoding + self.base64URLPadEncodedString()
+        default:
+            fatalError("Unsuported base encoding \(base)")
+        }
+    }
+
+    init?(multibaseEncoded multibaseString: String) {
         let byteString = Data(multibaseString.utf8)
         let base = BaseEncoding(rawValue: byteString[0])!
         let string = String(bytes: byteString[1...], encoding: String.Encoding.utf8)!
@@ -76,27 +76,27 @@ extension Data {
         case .identity:
             self = byteString[1...]
         case .base16, .base16Upper:
-            guard let decoded = Data(base16Decoding: string) else {
+            guard let decoded = Data(base16Encoded: string) else {
                 return nil
             }
             self = decoded
         case .base32Pad, .base32PadUpper:
-            guard let decoded = Data(base32Decoding: string) else {
+            guard let decoded = Data(base32Encoded: string) else {
                 return nil
             }
             self = decoded
         case .base32HexPad, .base32HexPadUpper:
-            guard let decoded = Data(base32HexDecoding: string) else {
+            guard let decoded = Data(base32HexEncoded: string) else {
                 return nil
             }
             self = decoded
         case .base58BTC:
-            guard let decoded = Data(base58Decoding: string, alphabet: Base58String.btcAlphabet) else {
+            guard let decoded = Data(base58Encoded: string, alphabet: Base58String.btcAlphabet) else {
                 return nil
             }
             self = decoded
         case .base58Flickr:
-            guard let decoded = Data(base58Decoding: string, alphabet: Base58String.flickrAlphabet) else {
+            guard let decoded = Data(base58Encoded: string, alphabet: Base58String.flickrAlphabet) else {
                 return nil
             }
             self = decoded

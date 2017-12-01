@@ -1,31 +1,54 @@
 import Foundation
 import Base32
 
-public extension String {
+extension Data {
 
-    public init(base32Encoding data: Data) {
-        self = Base32.base32Encode(data)
+    init?(base32Encoded string: String) {
+        guard let data = Base32.base32DecodeToData(string) else {
+            return nil
+        }
+        self = data
     }
 
-    public init(base32HexEncoding data: Data) {
-        self = Base32.base32HexEncode(data)
+    init?(base32Encoded data: Data) {
+        guard let string = String(data: data, encoding: .utf8) else {
+            return nil
+        }
+        self.init(base32Encoded: string)
+    }
+
+    func base32EncodedString() -> String {
+        return Base32.base32Encode(self)
+    }
+
+    func base32EncodedData() -> Data {
+        return self.base32EncodedString().data(using: .utf8)!
     }
 
 }
 
-public extension Data {
+extension Data {
 
-    public init?(base32Decoding base32String: String) {
-        guard let x = Base32.base32DecodeToData(base32String) else {
+    init?(base32HexEncoded string: String) {
+        guard let data = Base32.base32HexDecodeToData(string) else {
             return nil
         }
-        self = x
+        self = data
     }
 
-    public init?(base32HexDecoding base32String: String) {
-        guard let x = Base32.base32HexDecodeToData(base32String) else {
+    init?(base32HexEncoded data: Data) {
+        guard let string = String(data: data, encoding: .utf8) else {
             return nil
         }
-        self = x
+        self.init(base32HexEncoded: string)
     }
+
+    func base32HexEncodedString() -> String {
+        return Base32.base32HexEncode(self)
+    }
+
+    func base32HexEncodedData() -> Data {
+        return self.base32HexEncodedString().data(using: .utf8)!
+    }
+
 }
