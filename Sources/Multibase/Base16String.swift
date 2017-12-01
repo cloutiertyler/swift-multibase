@@ -1,8 +1,8 @@
 import Foundation
 
-extension Data {
+public extension Data {
 
-    init?(base16Encoded string: String) {
+    public init?(base16Encoded string: String) {
         // Convert 0 ... 9, a ... f, A ...F to their decimal value,
         // return nil for all other input characters
         func decodeNibble(u: UInt16) -> UInt8? {
@@ -34,18 +34,18 @@ extension Data {
         guard even else { return nil }
     }
 
-    init?(base16Encoded data: Data) {
+    public init?(base16Encoded data: Data) {
         guard let string = String(data: data, encoding: .utf8) else {
             return nil
         }
         self.init(base16Encoded: string)
     }
 
-    func base16EncodedString() -> String {
+    public func base16EncodedString() -> String {
         return self.map { String(format: "%02hhx", $0) }.joined()
     }
 
-    func base16EncodedData() -> Data {
+    public func base16EncodedData() -> Data {
         return self.base16EncodedString().data(using: .utf8)!
     }
 

@@ -8,7 +8,7 @@ public enum Base58String {
 
 public extension Data {
 
-    init?(base58Encoded string: String, alphabet: [UInt8] = Base58String.btcAlphabet) {
+    public init?(base58Encoded string: String, alphabet: [UInt8] = Base58String.btcAlphabet) {
         var answer = BigUInt(0)
         var j = BigUInt(1)
         let radix = BigUInt(alphabet.count)
@@ -27,14 +27,14 @@ public extension Data {
         self = byteString.prefix(while: { i in i == alphabet[0]}) + bytes
     }
 
-    init?(base58Encoded data: Data, alphabet: [UInt8] = Base58String.btcAlphabet) {
+    public init?(base58Encoded data: Data, alphabet: [UInt8] = Base58String.btcAlphabet) {
         guard let string = String(data: data, encoding: .utf8) else {
             return nil
         }
         self.init(base58Encoded: string, alphabet: alphabet)
     }
 
-    func base58EncodedString(alphabet: [UInt8] = Base58String.btcAlphabet) -> String {
+    public func base58EncodedString(alphabet: [UInt8] = Base58String.btcAlphabet) -> String {
         var x = BigUInt(self)
         let radix = BigUInt(alphabet.count)
 
@@ -54,7 +54,7 @@ public extension Data {
         return String(bytes: answer, encoding: String.Encoding.utf8)!
     }
 
-    func base58EncodedData() -> Data {
+    public func base58EncodedData() -> Data {
         return self.base58EncodedString().data(using: .utf8)!
     }
 

@@ -24,7 +24,7 @@ public enum BaseEncoding: UInt8 {
     case base64URLPad      = 085 // U
 }
 
-extension String {
+public extension String {
 
     public var baseEncoding: BaseEncoding {
         let base = Array(self.utf8)[0]
@@ -33,9 +33,9 @@ extension String {
 
 }
 
-extension Data {
+public extension Data {
 
-    func multibaseEncodedString(inBase base: BaseEncoding) -> String {
+    public func multibaseEncodedString(inBase base: BaseEncoding) -> String {
         let byteString = [base.rawValue] + self
         let stringBaseEncoding = String(bytes: [base.rawValue], encoding: String.Encoding.utf8)!
 
@@ -67,7 +67,7 @@ extension Data {
         }
     }
 
-    init?(multibaseEncoded multibaseString: String) {
+    public init?(multibaseEncoded multibaseString: String) {
         let byteString = Data(multibaseString.utf8)
         let base = BaseEncoding(rawValue: byteString[0])!
         let string = String(bytes: byteString[1...], encoding: String.Encoding.utf8)!
